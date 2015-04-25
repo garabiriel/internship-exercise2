@@ -1,14 +1,28 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-  <title>ConsumptionCalculator</title>
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <title>Fuel Consumption Calculator</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <div class="container master-container">
+    <div class='alert alert-info fade in' data-alert='alert'>
+      <h3>
+        <strong>
+          Fuel Consumption Calculator
+        </strong>
+      </h3>
+    </div>
 
-<%= yield %>
+    <%= yield %>
+  </div>
 
+  <footer class="footer">
+    <div class="container">
+    </div>
+  </footer>
 </body>
 </html>

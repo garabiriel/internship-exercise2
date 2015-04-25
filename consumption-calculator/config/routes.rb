@@ -53,4 +53,9 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  
+  root 'calculator#index'
+  
+  post 'calculator/calculate' => 'calculator#calculate', as: :calculate
+  get 'calculator/calculate' => 'calculator#index'
 end
