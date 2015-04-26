@@ -5,22 +5,51 @@ class CalculatorController < ApplicationController
 	def calculate
 		begin
 			@success = true
-			fuel_qty_is_float = !!Float(params[:calculator][:fuel_qty]) rescue false
-			distance_is_float = !!Float(params[:calculator][:distance]) rescue false
-			if !fuel_qty_is_float || !distance_is_float
+			@fuel_qty = params[:calculator][:fuel_qty]
+			@distance = params[:calculator][:distance]
+			error_messages = Array.new
+			if !is_a_valid_term?(@fuel_qty)
 				@success = false
-				@calc_result = "Fuel quantity must be a valid number" unless fuel_qty_is_float
-				@calc_result = "#{ @calc_result.concat('; ') unless @calc_result.blank? }Distance must be a positive valid number" unless distance_is_float
+				error_messages << invalid_term_message("Fuel quantity")
 			end
-			if distance_is_float == 0
+			if !is_a_valid_term?(@distance)
 				@success = false
-				@calc_result = "#{ @calc_result.concat('; ') unless @calc_result.blank? } Distance must be a positive valid number"
+				error_messages << invalid_term_message("Distance")
 			end
-			@calc_result = Calculator.calculate_to_s(params[:calculator][:fuel_qty], params[:calculator][:distance]) if @success
+			if @success
+				@calc_result = Calculator.calculate_to_s(@fuel_qty, @distance)
+				@fuel_qty = nil
+				@distance = nil
+			else
+				@error_msg = format_error_messages(error_messages)
+			end
 		rescue Exception => ex
 			@success = false
-			@calc_result = "Sorry, an error occurred."
+			@error_msg = "Sorry, an error occurred: #{ ex.message }"
 		end
 		render :index
+	end
+	
+	private
+	
+	def is_float_parsable?(var)
+		!!Float(var) rescue false
+	end
+	
+	def is_a_valid_term?(term)
+		is_float_parsable?(term) && Float(term) > 0
+	end
+	
+	def invalid_term_message(term_name)
+		"#{term_name} must be a valid positive number"
+	end
+	
+	def format_error_messages(error_messages)
+		final_message = ''
+		error_messages.each do |msg|
+			final_message << ' ;' if final_message.length > 0
+			final_message << msg
+		end
+		final_message
 	end
 end

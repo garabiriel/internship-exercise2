@@ -1,18 +1,18 @@
 ﻿<div>
-	<% if @calc_result %>
-		<div class="alert <%= @success ? 'alert-success' : 'alert-warning' %>  fade in" data-alert="alert">
+	<% if !@success.nil? %>
+		<div class="alert <%= @success ? 'alert-success' : 'alert-danger' %>  fade in" data-alert="alert">
 			<a class="close" data-dismiss='alert' href="#">x</a>
-			<p><%= @calc_result %></p>
+			<p><%= @success ? @calc_result : @error_msg %></p>
 		</div>
 	<% end %>
 	<%= form_tag(calculate_path, method: "post", role: "form") do %>
 		<div class="form-group">
 			<%= label_tag(:calculator_fuel_qty, "Fuel quantity (in liters)") %>
-			<%= number_field(:calculator, :fuel_qty) %>
+			<%= number_field(:calculator, :fuel_qty, step: 0.1, value: @fuel_qty) %>
 		</div>
 		<div class="form-group">
 			<%= label_tag(:calculator_distance, "Journey driven (in kilometers)") %>
-			<%= number_field(:calculator, :distance, step: 0.01) %>
+			<%= number_field(:calculator, :distance, step: 0.1, value: @distance) %>
 		</div>
 		<%= submit_tag("Calculate") %>
 	<% end %>
